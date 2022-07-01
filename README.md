@@ -41,7 +41,7 @@ Utilizes BioVoxxel’s Toolbox: 									       https://imagej.net/BioVoxxel_Too
 Utilizes MorphoLibJ Plugin: https://imagej.net/Distance_Transform_Watershed
     - DTW 20-8, recommended for poor prediction maps including very large or small cells
     Note: If you obtain good prediction maps from the AI, little post processing will be required so WIF10 or no post processing is recommended. If suboptimal prediction maps were obtained use DTW20 and DTW20-8 and compare the results.
-4. Prediction Map Threshold: Set the AI certainty threshold for the prediction maps. Note: the possible numbers range from 0-255. Higher numbers improve segmentation results but increase area errors, while lower numbers do the opposite. We recommend staying at 140.
+4. Prediction Map Threshold: Set the AI certainty threshold for the prediction maps. Note: the possible numbers range from 0-255. Higher numbers improve segmentation results but can increase area errors, while lower numbers do the opposite. Crucial parameter to adjust to your dataset as the confidence of any model will vary with the images given to it. 
 5. Apply shape filters to filter out undesired cells. Most parameters should be self explanatory except for "Maximum AR" which stands for maximum aspect ratio and for further information on Feret visit: https://imagej.nih.gov/ij/docs/guide/146-30.html . The cell size threshold is in the given scale, not in pixels. Use aspect ratio, minFeret and cell size to get rid of large cells and cross sections. Use a stronger circularity filter to get rid of artifacts like bubbles.
 6. Select this if you want holes inside cells to count towards their area and morphology.
 7. If you made images containing whole muscle slices / slides, mark this checkbox. This changes some functions in this tool to produce better results and allows for:
@@ -84,3 +84,53 @@ Depending on the input during the main the following output is generated:
 2. Results Summary.csv containing the min, max, mean and stdDev values of all parameters in all images and the min, max, mean and stdDev over all images.
 3. Results Summary Post Processed Only.csv is the same as (2.) except it uses the minimal post processing images.
 4. Chosen Parameters.txt containing all the chosen parameters during the main dialog.
+
+# 2. Feature: Automated Cell Overlays:
+Creates images, using the original image and the results. Gives every cell a different color for easy segmentation visualization. This is intended to facilitate verification of the results obtained from feature #1. Example:
+
+![grafik](https://user-images.githubusercontent.com/90180771/176909363-09861888-346d-4590-927a-d89ab875c20e.png)
+
+Executing this will first ask for three folders. First, select the directory that contains the original images, then select the folder with the images you would like to overlay (results) and the desired output folder. Then the main dialog will open:
+
+![grafik](https://user-images.githubusercontent.com/90180771/176911456-00cc9e70-a41e-46d5-9d14-b0d6881b1bcf.png)
+
+Important: The macro language in Fiji is file ending sensitive meaning if your original jpg image is called KOMouseMuscleSlice01_Image001 then it means that there is also a “.jpg” at the end of the image name! Depending on your Windows settings (Folder Options → View → Hide extensions for known file types) this file ending will either be visible or invisible. However, in both cases, Fiji does require the “raw” name and the file ending as a full complete name of the file. This is crucial for finding the corresponding image in the overlay image folder as they might be called either: 
+```
+KOMouseMuscleSlice01_Image001.jpg prediction.png
+
+or
+
+KOMouseMuscleSlice01_Image001 prediction.png
+``` 
+In other words  “.jpg” either needs to be kept or be removed. This macro will help you in doing so, but correct user input is required as no images will be found when the wrong input is entered. If you use this macro only in combination with the main macro, you can ignore this information by simply always keeping 8. + 9. untouched, as the input and output of the main macro is always “.png” and will always be required to be removed.
+
+1. Select the file format of your original files (e.g. tif, png, jpg, ...). 
+2. Hides the images while overlays are being generated.
+3. Can be used to make the result image binary, so that you can overlay all cells in white over the original image. Makes it easier to visualize which cells were taken for evaluation, but less easy to visualize segmentation. Note that 6. allows you to take a different image than white. 
+4. Instead choosing to give each cell a different color for easy segmentation visualization.
+5. If you used the "indicate muscle border" in feature #1, this can help you remove it.
+7. Choose the difference in the naming between the original files and the images you wish to overlay. For example if you original image is called "Image_001" and your overlay image is called "Image_001 Minimal Threshold", enter " Minimal Threshold" here (careful! space sensitive!).
+8. You can choose to replace a part in the naming of your files by entering the desired part in 8 and entering the new part in 9.
+10. Choose the opacity that you wish to use.
+11. Choose how you would like your output to be named.
+
+# Feature 3: Automated Post Analysis Heat-Maps
+This macro is essentially an extracted version of the post analysis uniform heat-map feature of the main macro (Chapter 3, XV. + following). However, this macro also has some additional features that are not build in the main macro and also adds the comfort of being able to decide the heat-map parameters after a first impression of the results. Please note, this macro only works with (almost) unaltered results of the main macro.
+
+First, choose the folder of the main macro output (containing the Result Summary.csv, Chosen Parameters.txt, …). The following dialog is then opened:
+
+![grafik](https://user-images.githubusercontent.com/90180771/176912534-5e733294-de42-4bf0-9529-c8ab2f4f8543.png)
+
+Everything that can be seen in the main dialog is explained in the explanation of feature #1 with one exception: this macro also allows you to save all the data in a seperate folder using the 2nd checkbox. Once the parameters are set, the result summary table is read and based on the average and stdevs that are read out and based on the parameters that were chosen, an adaptive new dialog is created:
+
+![grafik](https://user-images.githubusercontent.com/90180771/176913027-cf11f595-4e17-4ab3-9199-4510c0274f59.png)
+
+By default, this shows the average +- stddev values. However, here you can also set individual values. Uniform heat-maps will be generated after pressing "OK".
+
+# Feature 4: Muscle Size Identifier:
+Again a macro that is an extracted version of feature #1. Its intended use is to find the optimal "muscle size" parameter for feature #1 in a fast manner. First, choose the input (the prediction maps also used for the main macro) directory, then choose the parameters in the following dialog exactly as intended for the main macro later. This is crucial, since shape filters will alter the muscle slice size. The output will always be a table (.csv) and optionally muscle masks can be saved as well using the appripriate checkboxes. Explanation for the checkboxes and parameters, see the explanation in Feature 1.
+
+# Feature 5: Count Mask to Binary Converter:
+Very simple macro. Changes the count mask output of feature #1 to a binary image (with 0 being the background, and 65535 being cells). Intended as a QoL feature for easier visualization of masks obtained as an output from feature #1. Example (count mask left, output of this macro right):
+
+![grafik](https://user-images.githubusercontent.com/90180771/176914953-7555fa76-f4a0-433b-9c03-e08d906722ff.png)
