@@ -68,3 +68,19 @@ Utilizes MorphoLibJ Plugin: https://imagej.net/Distance_Transform_Watershed
 19. Instead of using Min - Max scaling for the heat-maps, instead takes mean +- std dev. Usually makes heat-maps much more informative.
 20. instead of creating a individual, different scaling for each image, this creates a uniform scaling for all images. Uses the average+-stddev over ALL images.
 21. If you want uniform heat-maps, but no individual ones, select this checkbox.
+
+## Output:
+Depending on the input during the main the following output is generated:
+1. A folder for each original file containing all generated images of the respective file:
+
+		- Minimal Threshold Image (Always)
+		- Minimal Threshold Results (Always)
+		- Raw Muscle Mask and / or Filtered Muscle Mask 
+		- Raw Connective Tissue and / or Filtered Connective Tissue 
+		- Shape Filtered Image
+		- Results of Filtered, Cleared Outside, Connective Tissue Images
+		- Additional Optional Images: Oriented Bounding Boxes and Heat Maps
+    
+2. Results Summary.csv containing the min, max, mean and stdDev values of all parameters in all images and the min, max, mean and stdDev over all images.
+3. Results Summary Post Processed Only.csv is the same as (2.) except it uses the minimal post processing images.
+4. Chosen Parameters.txt containing all the chosen parameters during the main dialog.
