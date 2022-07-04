@@ -1,5 +1,5 @@
-# Fully automatic HE Muscle Slide Segmentation and Analysis - A Fiji Toolset for Fibre Cells and Connective Tissue
-This toolset for FIJI allows for fully automatic muscle fibre and connective tissue analysis. Additionally, heat maps, bounding boxes and local thickness for connective tissue images can be generated to visualize the obtained results. This FIJI toolset used and developed for the following paper:
+# Fully automatic HE Muscle Slide Segmentation and Analysis - A Fiji Toolset for Muscle Fibers and Connective Tissue
+This toolset for FIJI allows for fully automatic muscle fibers and connective tissue analysis. Additionally, heat maps, bounding boxes and local thickness for connective tissue images can be generated to visualize the obtained results. This FIJI toolset used and developed for the following paper:
 
 # Requirements and Installation
 ## Requirements:
@@ -18,7 +18,7 @@ Add the "HE Muscle Segmentation Toolset.ijm" file from this repository to the fo
 ```
 FIJI
   |______ macros
-          |_____ toolsets -> put file here
+          |______ toolsets -> put file here
 ```
 To activate the toolset: press on the red arrow at the very right (red box), select HE Segmentation Toolset and then press on the icon that just appeared (yellow box).
 
